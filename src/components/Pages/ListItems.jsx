@@ -42,14 +42,14 @@ const ListItems = () => {
 
   return (
     <div className="grid grid-cols-5 lg:grid-cols-7 lg:m-10 lg:gap-y-6 mx-5 lg:gap-x-6 gap-x-5 gap-y-5">
-      <p className="lg:text-2xl font-bold">Image</p>
-      <p className="lg:text-2xl font-bold">Name</p>
-      <p className="lg:text-2xl font-bold">Category</p>
+      <p className="lg:text-2xl text-sm font-bold">Image</p>
+      <p className="lg:text-2xl text-sm font-bold">Name</p>
+      <p className="lg:text-2xl text-sm font-bold">Category</p>
       <p className="lg:text-2xl hidden lg:block font-bold col-span-2">
         Description
       </p>
-      <p className="lg:text-2xl font-bold">Price</p>
-      <p className="lg:text-2xl font-bold">Delete</p>
+      <p className="lg:text-2xl text-sm font-bold">Price</p>
+      <p className="lg:text-2xl text-sm font-bold">Delete</p>
       {foodList.map((item) => (
         <div
           key={item._id}
