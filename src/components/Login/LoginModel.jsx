@@ -11,7 +11,7 @@ const LoginModel = () => {
     return values.join("");
   }, [values]);
   const checkPasskey = () => {
-    if (addedValues === import.meta.env.VITE_PASSKEY) {
+    if (addedValues === `${import.meta.env.VITE_PASSKEY}`) {
       setLoggedIn(true);
       setError(null);
       localStorage.setItem("adminPin", addedValues);
@@ -21,10 +21,8 @@ const LoginModel = () => {
     }
   };
   useEffect(() => {
-    if (
-      localStorage.getItem("adminPin") &&
-      localStorage.getItem("adminPin") === import.meta.env.VITE_PASSKEY
-    ) {
+    const storedPin = localStorage.getItem("adminPin");
+    if (storedPin && storedPin === `${import.meta.env.VITE_PASSKEY}`) {
       setLoggedIn(true);
       navigate("/");
     }
