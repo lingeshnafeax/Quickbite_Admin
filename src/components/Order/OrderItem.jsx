@@ -3,26 +3,33 @@ import OrderBoxIcon from "../ui/OrderBoxIcon";
 import axios from "axios";
 
 import toast from "react-hot-toast";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 const OrderItem = ({ order }) => {
-  const changeOrderStatus = async (status, orderId) => {
-    try {
-      const response = await axios.patch(
-        `${import.meta.env.VITE_BACKEND_URL}/api/order/changeOrderStatus`,
-        {
-          orderId: orderId,
-          status: status,
-        }
-      );
-      if (response.data.success) {
-        toast.success("Status changes successfully");
-      } else {
-        toast.error("Failed to change order status");
+  const queryClient = useQueryClient();
+
+  const changeOrderStatus = async ({ status, orderId }) => {
+    const response = await axios.patch(
+      `${import.meta.env.VITE_BACKEND_URL}/api/order/changeOrderStatus`,
+      {
+        orderId: orderId,
+        status: status,
       }
-    } catch (err) {
-      toast.error("Failed to change order status");
-      console.log("Failed to change order status", err);
+    );
+
+    if (response.data.success) {
+      toast.success("Status changed");
+      queryClient.invalidateQueries({ queryKey: ["orders"] });
+    } else {
+      toast.error("Error changing status");
     }
+    return response;
   };
+
+  const changeStatus = useMutation({
+    mutationKey: ["changeStatus"],
+    mutationFn: changeOrderStatus,
+  });
+
   return (
     <div className="grid grid-cols-5  items-center gap-3 rounded-md border border-primary p-3 text-[12px] lg:grid-cols-7 lg:p-5 lg:text-sm">
       <div className="col-span-5 flex flex-col items-start  gap-y-2  gap-x-2 lg:col-span-4">
@@ -57,7 +64,10 @@ const OrderItem = ({ order }) => {
         <div>
           <select
             onChange={(e) => {
-              changeOrderStatus(e.target.value, order._id);
+              changeStatus.mutate({
+                status: e.target.value,
+                orderId: order._id,
+              });
             }}
             defaultValue={order.status}
             className="p-1 border border-primary rounded-md"
